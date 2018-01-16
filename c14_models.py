@@ -88,22 +88,22 @@ def I1a(Dbirth, Dcoll, lam, mu, N=1000, C_init=np.inf):
 
 def I1(Dbirth, Dcoll, lam, C_init=np.inf, t_eval=None):
     if t_eval is None:
-        t_eval=[Dcoll]
+        t_eval=[Dbirth, Dcoll]
     
     if C_init==np.inf:
         C_init = C_atm(Dbirth)
     
-    def rhs(t, c, lam):
+    def rhs(c, t, lam):
         return lam * (C_atm(t) - c)
     
-    C = sp.integrate.solve_ivp(fun=lambda t, c: rhs(t, c, lam=lam),
-                               t_span=[Dbirth, Dcoll],
-                               y0=[C_init], 
-                               t_eval=t_eval,
-                               rtol=1e-3,
-                               atol=1e-6)
+    sol = sp.integrate.odeint(func=rhs, 
+                            y0=[C_init],
+                            t=t_eval,
+                            args=(lam, ))
+    c = sol[:, 0]
     
-    return C['t'], C['y'][0]
+    
+    return t_eval, c
 
 
 # I2
