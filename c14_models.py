@@ -110,7 +110,7 @@ def I1(Dbirth, Dcoll, lam, C_init=np.inf, t_eval=None):
 
 def I2(Dbirth, Dcoll, lam, f, C_init=np.inf, t_eval=None):
     if t_eval is None:
-        t_eval = [Dcoll]
+        t_eval = [Dbirth, Dcoll]
     assert 0<=f<=1
     C2 = C_atm(Dbirth)
     
@@ -121,7 +121,7 @@ def I2(Dbirth, Dcoll, lam, f, C_init=np.inf, t_eval=None):
 
 def IX(Dbirth, Dcoll, deltalaml, ff, C_init=np.inf, t_eval=None):
     if t_eval is None:
-        t_eval = [Dcoll]
+        t_eval = [Dbirth, Dcoll]
     f = np.sum(ff)
     assert 0<=np.sum(f)<=1
     C0 = C_atm(Dbirth)
