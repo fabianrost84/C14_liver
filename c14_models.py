@@ -134,6 +134,32 @@ def IX(Dbirth, Dcoll, deltalaml, ff, C_init=np.inf, t_eval=None):
     ff.shape = (len(CC), 1)
     return t_eval, np.sum(ff*CC, axis=0) + (1.0-f)*C0
 
+# IL
+
+def IL(Dbirth, Dcoll, lam, f, C_init=np.inf, t_eval=None):
+    if t_eval is None:
+        t_eval=[Dbirth, Dcoll]
+    
+    if C_init==np.inf:
+        C_init = C_atm(Dbirth)
+    
+    def rhs(c, t, lam, f):
+        cA, cB = c
+        d_cA = lam * (np.vectorize(C_atm)(t) - cA)
+        d_cB = lam * f / (1-f) * (cA - cB)
+        return np.array([d_cA, d_cB])
+    
+    sol = sp.integrate.odeint(func=rhs, 
+                            y0=[C_init, C_init],
+                            t=t_eval,
+                            args=(lam, f))
+    
+    cA = sol[:,0]
+    cB = sol[:,1]
+
+    c = f * cA + (1 - f) * cB 
+    
+    return t_eval, c
 
 # old stufff
 
