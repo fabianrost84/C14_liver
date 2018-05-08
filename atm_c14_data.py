@@ -1,6 +1,7 @@
 import numpy as np
 import scipy as sp
 from scipy import interpolate
+from scipy import optimize
 import pandas as pd
 
 tlag = 1.0
@@ -29,7 +30,7 @@ for i in np.arange(0, len(tt)-0.5, 1).astype(int):
     
 #######################
 
-last_c14 = c14_data['d14C'].loc[c14_data['year'].argmax()]
+last_c14 = c14_data['d14C'].loc[c14_data['year'].idxmax()]
 extrapolate_value =[2020.0, last_c14]
 
 c14_data.loc['extrapolate_value'] = extrapolate_value
