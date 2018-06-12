@@ -106,6 +106,27 @@ def I1(Dbirth, Dcoll, lam, C_init=np.inf, t_eval=None):
     return t_eval, c
 
 
+def I1T(Dbirth, Dcoll, lam, C_init=np.inf, t_eval=None, lam_arg=()):
+    """ Here, lam(t, *lam_arg) is a function of t.
+    """
+    if t_eval is None:
+        t_eval=[Dbirth, Dcoll]
+    
+    if C_init==np.inf:
+        C_init = C_atm(Dbirth)
+    
+    def rhs(c, t, lam, lam_arg):
+        return lam(t, *lam_arg) * (C_atm(t) - c)
+    
+    sol = sp.integrate.odeint(func=rhs, 
+                            y0=[C_init],
+                            t=t_eval,
+                            args=(lam, lam_arg))
+    c = sol[:, 0]
+    
+    
+    return t_eval, c
+
 # I2
 
 def I2(Dbirth, Dcoll, lam, f, C_init=np.inf, t_eval=None):
