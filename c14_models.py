@@ -105,6 +105,21 @@ def I1(Dbirth, Dcoll, lam, C_init=np.inf, t_eval=None):
     
     return t_eval, c
 
+def I1c(Dbirth, Dcoll, lam):
+    Ddev = Dbirth
+    tdeath = Dcoll - Ddev
+    C = C_atm(Dcoll - tdeath) * np.exp(-lam * tdeath)
+
+    step = min(1.0/lam/10.0, 1.0)
+    num = int(tdeath / step)
+    ages = sp.linspace(0, tdeath,  num, endpoint = True)
+    y = np.vectorize(C_atm)(Dcoll - ages) * np.exp(-lam * ages)
+    integral = sp.integrate.trapz(y, ages)
+    
+    C += lam * integral
+
+    return C
+
 
 def I1T(Dbirth, Dcoll, lam, C_init=np.inf, t_eval=None, lam_arg=()):
     """ Here, lam(t, *lam_arg) is a function of t.
@@ -218,8 +233,8 @@ from scipy import integrate
 import sys
 import pandas as pd
 
-Klag = atm_c14_data.Klag
-t0 = 0.5
+Klag = np.vectorize(C_atm)
+t0 = 0.0
 
 def C_scenario_A(Dbirth, Dcoll, r):
   """ predicted C14 for scenario A
