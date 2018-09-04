@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numba
 import numpy as np
 import scipy as sp
+from scipy import integrate
 import seaborn as sns
 
 # Atmospheric C14 function
@@ -226,12 +227,6 @@ def IL(Dbirth, Dcoll, lam, f, C_init=np.inf, t_eval=None):
     return t_eval, c
 
 # old stufff
-
-import atm_c14_data
-import scipy as sp
-from scipy import integrate
-import sys
-import pandas as pd
 
 Klag = np.vectorize(C_atm)
 t0 = 0.0
