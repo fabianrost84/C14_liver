@@ -105,4 +105,4 @@ ENV/
 
 #cache
 cache
-*.pkl
+ipycache
